@@ -40,7 +40,7 @@ async function main(){
 		checked = index;
 		const text = $(curr).text();
 		const user_url = "https://www.youtube.com"+$(curr).parent().parent().prev().find("a#author-text").attr('href');
-		console.log(user_url);
+		//console.log(user_url);
 		const response = await fetch('http://localhost:8080/get_tokens', {
 			method: 'POST',
 			body: JSON.stringify({'text': text, 'user_url': user_url}),
@@ -53,10 +53,10 @@ async function main(){
 		let color = "green";
 		let span_text = ' Бот на '+'0%';
 		const metric_span = document.createElement('span');
-		console.log(data);
+		//console.log(data);
 		if(data['is_in_bots']){
 			color = "red";
-			span_text = "Найден в БД";
+			span_text = " Найден в БД";
 		}else{
 			const inferenceInputs =  [
 				new Tensor(new Int32Array (data['tokens']), "int32", [1, 748]),
@@ -66,9 +66,12 @@ async function main(){
 		    const outputTensor = outputMap.values().next().value;
 		    const bot_percentage = (outputTensor.data[1]*100).toFixed(2);
 		    if(bot_percentage > 50){
-		    	color = 'red';
+		    	color = 'orange';
+		    	span_text = ' Возможно бот!';
+		    }else{
+		    	span_text = '';
 		    }
-		    span_text = ' Бот на '+bot_percentage+'%';
+		    
 		}
 
 	    metric_span.innerHTML = span_text;
